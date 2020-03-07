@@ -1,6 +1,5 @@
 const http = require('http');
 
-const hostname = '127.0.0.1';
 const port = 3000;
 
 if (! ("WORLD_STATE" in process.env)) {
@@ -13,6 +12,6 @@ const server = http.createServer((req, res) => {
   res.end(`Goodbye, ${process.env.WORLD_STATE} world!`);
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(port, () => {
+  console.log(`Server running at http://0.0.0.0:${port}/`);
 });
