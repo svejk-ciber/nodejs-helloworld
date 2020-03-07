@@ -14,10 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:$(date +%s)
-      
-    - name: Publish the image to Github Packages
+    - name: Build and publish the Docker image to Github Packages
+      env:
+        tag: docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:$(date +%s)
       run: |
+        docker build . --file Dockerfile --tag ${tag}
         docker login -u ${GITHUB_ACTOR} -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
-        docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:$(date +%s)
+        docker push ${tag}
