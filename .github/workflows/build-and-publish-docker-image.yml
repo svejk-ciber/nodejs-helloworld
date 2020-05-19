@@ -13,13 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Build and publish the Docker image to Github Packages
       env:
         tag: docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:${{ github.sha }}
-      run: |
+#    - uses: actions/checkout@v2
+      uses: azure/docker-login@v1
+      with: 
+        login-server: docker.pkg.github.com
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - run: |
         docker build . --file Dockerfile --tag ${tag}
-        docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
         docker push ${tag}
         docker tag ${tag} docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest
         docker push docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest        
