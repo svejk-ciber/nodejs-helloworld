@@ -8,7 +8,6 @@ on:
 
 env:
   registry: docker.pkg.github.com
-  tag: ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}        
 
 jobs:
 
@@ -24,8 +23,10 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and publish the Docker image
+      env:
+        tag: ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}
       run: |
         docker build . --file Dockerfile --tag ${tag}
         docker push ${tag}
-        docker tag ${tag} docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest
-        docker push docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest        
+        docker tag ${tag} ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:latest
+        docker push ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:latest        
