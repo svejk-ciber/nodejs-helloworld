@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  registry: docker.pkg.github.com
+  tag: ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}        
+
 jobs:
 
   build:
@@ -13,16 +17,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Build and publish the Docker image to Github Packages
-      env:
-        tag: docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:${{ github.sha }}
-#    - uses: actions/checkout@v2
+    - name: Login to docker.pkg.github.com
       uses: azure/docker-login@v1
       with: 
         login-server: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - run: |
+    - name: Build and publish the Docker image
+      run: |
         docker build . --file Dockerfile --tag ${tag}
         docker push ${tag}
         docker tag ${tag} docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest
