@@ -19,7 +19,7 @@ jobs:
         tag: docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:${{ github.sha }}
       run: |
         docker build . --file Dockerfile --tag ${tag}
-        docker login -u ${{ GITHUB_ACTOR }} -p ${{ secrets.GITHUB_TOKEN }}
+        docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
         docker push ${tag}
         docker tag ${tag} docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest
         docker push docker.pkg.github.com/svejk-ciber/${{ github.event.repository.name }}:latest        
