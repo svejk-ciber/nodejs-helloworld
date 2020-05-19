@@ -22,9 +22,10 @@ jobs:
         login-server: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Export image tag value
+      run: echo '::set-env name=TAG::${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}'
     - name: Build and publish the Docker image
       run: |
-        echo '::set-env name=TAG::${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}'
         docker build . --file Dockerfile --tag ${TAG}
         docker push ${TAG}
         docker tag ${TAG} ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:latest
