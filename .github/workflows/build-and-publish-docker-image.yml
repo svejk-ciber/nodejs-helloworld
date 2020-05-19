@@ -16,14 +16,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+      
     - name: Login to docker.pkg.github.com
       uses: azure/docker-login@v1
       with: 
         login-server: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+  
     - name: Export image tag value
       run: echo '::set-env name=TAG::${{ env.registry }}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}'
+
     - name: Build and publish the Docker image
       run: |
         docker build . --file Dockerfile --tag ${TAG}
