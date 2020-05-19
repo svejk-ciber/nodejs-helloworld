@@ -23,10 +23,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and publish the Docker image
-      env:
-        tag: ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}
       run: |
-        docker build . --file Dockerfile --tag ${tag}
-        docker push ${tag}
-        docker tag ${tag} ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:latest
+        echo '::set-env name=TAG::${registry}/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.sha }}'
+        docker build . --file Dockerfile --tag ${TAG}
+        docker push ${TAG}
+        docker tag ${TAG} ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:latest
         docker push ${registry}/${{ github.actor }}/${{ github.event.repository.name }}:latest        
