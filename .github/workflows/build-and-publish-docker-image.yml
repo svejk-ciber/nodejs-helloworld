@@ -28,11 +28,11 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
   
     - name: Export image tag value
-      run: echo '::set-env name=TAG::${{ env.registry }}/${{ env.repo }}//${{ github.event.repository.name }}:${{ github.sha }}'
+      run: echo '::set-env name=TAG::${{ env.registry }}/${{ env.repo }}/${{ github.event.repository.name }}:${{ github.sha }}'
 
     - name: Build and publish the Docker image
       run: |
         docker build . --file Dockerfile --tag ${TAG}
         docker push ${TAG}
-        docker tag ${TAG} ${{ env.registry }}/${{ env.repo }}//${{ github.event.repository.name }}:latest
-        docker push ${{ env.registry }}/${{ env.repo }}//${{ github.event.repository.name }}:latest
+        docker tag ${TAG} ${{ env.registry }}/${{ env.repo }}/${{ github.event.repository.name }}:latest
+        docker push ${{ env.registry }}/${{ env.repo }}/${{ github.event.repository.name }}:latest
